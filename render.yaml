@@ -3,14 +3,10 @@ services:
   - type: web
     name: confirmiq
     runtime: docker
-    plan: starter
+    plan: free
     healthCheckPath: /actuator/health/readiness
     envVars:
       - key: APP_JWT_SECRET
         generateValue: true
       - key: APP_SEED_DEMO_DATA
         value: "true"
-    disk:
-      name: confirmiq-data
-      mountPath: /data
-      sizeGB: 1
