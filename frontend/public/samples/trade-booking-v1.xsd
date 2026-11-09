@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Trade booking message accepted by ConfirmIQ (FpML-inspired, simplified for FX). -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="urn:meridian:confirmiq:booking:1.0"
+           targetNamespace="urn:meridian:confirmiq:booking:1.0"
+           elementFormDefault="qualified">
+
+    <xs:simpleType name="Currency">
+        <xs:restriction base="xs:string"><xs:pattern value="[A-Z]{3}"/></xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PositiveDecimal">
+        <xs:restriction base="xs:decimal"><xs:minExclusive value="0"/></xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ProductType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="FX_SPOT"/>
+            <xs:enumeration value="FX_FORWARD"/>
+            <xs:enumeration value="FX_SWAP"/>
+            <xs:enumeration value="FX_NDF"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="Leg">
+        <xs:sequence>
+            <xs:element name="valueDate" type="xs:date"/>
+            <xs:element name="buyCurrency" type="Currency"/>
+            <xs:element name="buyAmount" type="PositiveDecimal"/>
+            <xs:element name="sellCurrency" type="Currency"/>
+            <xs:element name="sellAmount" type="PositiveDecimal"/>
+            <xs:element name="rate" type="PositiveDecimal"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="FarLeg">
+        <xs:sequence>
+            <xs:element name="valueDate" type="xs:date"/>
+            <xs:element name="buyAmount" type="PositiveDecimal"/>
+            <xs:element name="sellAmount" type="PositiveDecimal"/>
+            <xs:element name="rate" type="PositiveDecimal"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="NdfTerms">
+        <xs:sequence>
+            <xs:element name="settlementCurrency" type="Currency"/>
+            <xs:element name="fixingDate" type="xs:date"/>
+            <xs:element name="fixingSource" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Trade">
+        <xs:sequence>
+            <xs:element name="externalRef" type="xs:string"/>
+            <xs:element name="productType" type="ProductType"/>
+            <xs:element name="counterparty" type="xs:string"/>
+            <xs:element name="tradeDate" type="xs:date"/>
+            <xs:element name="executionTime" type="xs:dateTime"/>
+            <xs:element name="book" type="xs:string"/>
+            <xs:element name="trader" type="xs:string"/>
+            <xs:element name="nearLeg" type="Leg"/>
+            <xs:element name="farLeg" type="FarLeg" minOccurs="0"/>
+            <xs:element name="ndf" type="NdfTerms" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="tradeBooking">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="header">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="messageId" type="xs:string"/>
+                            <xs:element name="sourceSystem" type="xs:string"/>
+                            <xs:element name="createdAt" type="xs:dateTime"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="trade" type="Trade" maxOccurs="500"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

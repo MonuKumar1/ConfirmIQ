@@ -1,0 +1,10 @@
+**/node_modules
+**/dist
+**/target
+**/data
+**/.idea
+**/.vscode
+**/.DS_Store
+trade-confirmation-backend
+trade-confirmation-ui
+.git
